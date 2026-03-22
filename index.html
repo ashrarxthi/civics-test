@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>U.S. Citizenship Civics Practice Test</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue: #1a56a4; --blue-light: #e8f0fb; --blue-dark: #0d3672;
+    --green: #1e6f3e; --green-light: #e8f5ee;
+    --red: #a32020; --red-light: #fceaea;
+    --gray-50: #f7f8fa; --gray-100: #eef0f4; --gray-200: #d9dde5;
+    --gray-400: #8a93a2; --gray-600: #525c6b; --gray-900: #1a1f2b;
+    --radius: 10px; --radius-sm: 6px;
+    --shadow: 0 1px 4px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.06);
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--gray-50); color: var(--gray-900); min-height: 100vh; padding: 2rem 1rem; line-height: 1.6; font-size: 17px; }
+  .container { max-width: 660px; margin: 0 auto; }
+  .card { background: #fff; border-radius: var(--radius); border: 1px solid var(--gray-200); box-shadow: var(--shadow); padding: 2rem; margin-bottom: 1rem; }
+  .flag-header { text-align: center; margin-bottom: 2rem; }
+  .flag-icon { font-size: 3rem; margin-bottom: 0.75rem; display: block; }
+  h1 { font-size: 1.5rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.25rem; }
+  h2 { font-size: 1.05rem; font-weight: 600; color: var(--gray-900); margin-bottom: 1.5rem; line-height: 1.55; }
+  .subtitle { font-size: 0.9rem; color: var(--gray-600); }
+  .info-box { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin: 1.25rem 0; }
+  .info-box p { font-size: 0.9rem; color: var(--gray-600); margin-bottom: 0.3rem; }
+  .info-box p:last-child { margin-bottom: 0; }
+  .info-box strong { color: var(--gray-900); }
+  .btn-primary { display: block; width: 100%; padding: 0.9rem 1.5rem; background: var(--blue); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 1.05rem; font-weight: 600; cursor: pointer; text-align: center; transition: background 0.15s; }
+  .btn-primary:hover { background: var(--blue-dark); }
+  .btn-outline { padding: 0.75rem 1.25rem; background: #fff; color: var(--gray-600); border: 1px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+  .btn-outline:hover { background: var(--gray-50); }
+  .progress-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--gray-600); }
+  .progress-bar { height: 6px; background: var(--gray-100); border-radius: 3px; overflow: hidden; margin-bottom: 1.75rem; }
+  .progress-fill { height: 100%; background: var(--blue); border-radius: 3px; transition: width 0.3s ease; }
+  .choice-btn { display: block; width: 100%; text-align: left; padding: 1rem 1.1rem; margin-bottom: 0.7rem; border-radius: var(--radius-sm); border: 2px solid var(--gray-200); background: var(--gray-50); color: var(--gray-900); font-size: 0.95rem; cursor: pointer; transition: all 0.12s; line-height: 1.5; }
+  .choice-btn:hover:not(:disabled):not(.selected) { border-color: #9ab8e0; background: #f0f6ff; }
+  .choice-btn.selected { border-color: var(--blue); background: var(--blue-light); color: var(--blue-dark); font-weight: 500; }
+  .choice-btn.correct { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 600; }
+  .choice-btn.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+  .choice-btn:disabled { cursor: default; }
+  .submit-btn { display: none; width: 100%; margin-top: 0.5rem; padding: 0.95rem; background: var(--blue); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+  .submit-btn:hover { background: var(--blue-dark); }
+  .submit-btn.visible { display: block; }
+  .hint-text { font-size: 0.82rem; color: var(--gray-400); text-align: center; margin-top: 0.5rem; }
+  .feedback-box { display: none; margin-top: 1rem; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid; }
+  .feedback-box.correct { border-color: #8ecfaa; }
+  .feedback-box.wrong { border-color: #f0b4b4; }
+  .feedback-header { padding: 0.75rem 1rem; font-weight: 600; font-size: 0.95rem; }
+  .feedback-box.correct .feedback-header { background: #d4eddf; color: var(--green); }
+  .feedback-box.wrong .feedback-header { background: #fad6d6; color: var(--red); }
+  .feedback-body { padding: 0.85rem 1rem; font-size: 0.9rem; line-height: 1.6; color: #3a4150; background: #fff; }
+  .feedback-body .correct-label { font-weight: 600; color: var(--green); margin-bottom: 0.25rem; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .feedback-body .correct-answer { font-weight: 600; color: var(--gray-900); margin-bottom: 0.6rem; }
+  .feedback-body .explanation { color: var(--gray-600); border-top: 1px solid var(--gray-100); padding-top: 0.6rem; margin-top: 0.6rem; }
+  .next-btn { display: none; width: 100%; margin-top: 0.75rem; padding: 0.9rem; background: var(--gray-900); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+  .next-btn:hover { background: #000; }
+  .next-btn.visible { display: block; }
+  .result-header { text-align: center; margin-bottom: 1.5rem; }
+  .result-emoji { font-size: 3.5rem; display: block; margin-bottom: 0.5rem; }
+  .result-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .result-sub { font-size: 0.9rem; color: var(--gray-600); }
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin: 1.25rem 0; }
+  .stat-card { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-sm); padding: 0.85rem; text-align: center; }
+  .stat-label { font-size: 0.72rem; color: var(--gray-400); margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat-value { font-size: 1.5rem; font-weight: 700; }
+  .stat-value.pass { color: var(--green); }
+  .stat-value.fail { color: var(--red); }
+  .btn-row { display: flex; gap: 0.75rem; margin-top: 1rem; }
+  .btn-row .btn-outline { flex: 1; }
+  .btn-row .btn-primary { flex: 2; }
+  .review-item { border-radius: var(--radius-sm); border: 1px solid var(--gray-200); padding: 0.9rem 1rem; margin-bottom: 0.6rem; border-left-width: 4px; }
+  .review-item.correct { border-left-color: var(--green); }
+  .review-item.wrong { border-left-color: var(--red); }
+  .review-tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem; }
+  .review-tag.correct { color: var(--green); }
+  .review-tag.wrong { color: var(--red); }
+  .review-q { font-size: 0.88rem; font-weight: 600; color: var(--gray-900); margin-bottom: 0.35rem; line-height: 1.45; }
+  .review-meta { font-size: 0.83rem; }
+  .review-meta .your { color: var(--red); margin-bottom: 0.15rem; }
+  .review-meta .ans { color: var(--green); margin-bottom: 0.15rem; }
+  .review-meta .expl { color: var(--gray-600); margin-top: 0.3rem; font-style: italic; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  .qnum-badge { display: inline-block; background: var(--blue-light); color: var(--blue-dark); font-size: 0.78rem; font-weight: 600; padding: 0.2rem 0.65rem; border-radius: 20px; margin-bottom: 0.85rem; }
+  footer { text-align: center; margin-top: 2rem; font-size: 0.75rem; color: var(--gray-400); }
+  @media (max-width: 480px) { body { padding: 1rem 0.75rem; font-size: 16px; } .card { padding: 1.25rem; } .btn-row { flex-direction: column-reverse; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div id="screen-start" class="screen active">
+  <div class="card">
+    <div class="flag-header">
+      <span class="flag-icon">🇺🇸</span>
+      <h1>U.S. Citizenship Civics Test</h1>
+      <p class="subtitle">N-400 Official Practice Exam &middot; 2025 Version</p>
+    </div>
+    <div class="info-box">
+      <p><strong>How the real test works:</strong></p>
+      <p>&middot; A USCIS officer asks <strong>20 questions</strong> from the 128-question bank</p>
+      <p>&middot; You must answer <strong>at least 12 correctly</strong> to pass (60%)</p>
+      <p>&middot; The officer asks orally &mdash; this app simulates with multiple choice</p>
+    </div>
+    <div style="background:#fff8e8;border:1px solid #f0d080;border-radius:var(--radius-sm);padding:0.9rem 1.1rem;margin-bottom:1.25rem;font-size:0.9rem;color:#7a5800;line-height:1.55;">
+      <strong style="color:#5a3f00;">&#9733; Study tip:</strong> Take this quiz at least <strong>3 times</strong> and aim for a score of <strong>70% or higher</strong> each time before your interview. The more you practice, the more confident you will feel.
+    </div>
+    <button class="btn-primary" onclick="startGame()">Start Practice Test &rarr;</button>
+  </div>
+  <footer>Based on the official USCIS 2025 civics test &middot; uscis.gov/citizenship</footer>
+</div>
+
+<div id="screen-playing" class="screen">
+  <div style="margin-bottom:0.75rem;">
+    <button onclick="showScreen('start')" style="background:none;border:none;color:var(--gray-600);font-size:0.88rem;cursor:pointer;padding:0.25rem 0;display:inline-flex;align-items:center;gap:0.35rem;">&larr; Back to Home</button>
+  </div>
+  <div class="card">
+    <div class="progress-row">
+      <span id="q-counter">Question 1 of 20</span>
+      <span id="score-counter">Score: 0</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:4%"></div></div>
+    <div class="qnum-badge" id="q-badge">Q1 of 20</div>
+    <h2 id="question-text"></h2>
+    <div id="choices-container"></div>
+    <button class="submit-btn" id="submit-btn" onclick="submitAnswer()">Submit Answer</button>
+    <p class="hint-text" id="hint-text">Select an answer above, then tap Submit</p>
+    <div class="feedback-box" id="feedback-box">
+      <div class="feedback-header" id="feedback-header"></div>
+      <div class="feedback-body" id="feedback-body"></div>
+    </div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next Question &rarr;</button>
+  </div>
+</div>
+
+<div id="screen-results" class="screen">
+  <div class="card">
+    <div class="result-header">
+      <span class="result-emoji" id="result-emoji">🎉</span>
+      <div class="result-title" id="result-title">You Passed!</div>
+      <div class="result-sub" id="result-sub"></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Score</div><div class="stat-value" id="stat-score">-</div></div>
+      <div class="stat-card"><div class="stat-label">Percent</div><div class="stat-value" id="stat-pct">-</div></div>
+      <div class="stat-card"><div class="stat-label">To Pass</div><div class="stat-value">12/20</div></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-outline" onclick="toggleReview(this)">Review Answers</button>
+      <button class="btn-primary" onclick="startGame()">Play Again &rarr;</button>
+    </div>
+  </div>
+  <div id="review-container" style="display:none"></div>
+  <footer>Based on the official USCIS 2025 civics test &middot; uscis.gov/citizenship</footer>
+</div>
+
+</div>
+<script>
+var Q=[
+{q:"What is the form of government of the United States?",a:"Constitutional federal republic",w:["Monarchy","Parliamentary democracy","Theocracy"],e:"The U.S. is a constitutional federal republic — citizens elect representatives, and the Constitution is the supreme law. It is not a monarchy (no king or queen) or a direct democracy."},
+{q:"What is the supreme law of the land?",a:"The U.S. Constitution",w:["The Declaration of Independence","Federal statutes","The Bill of Rights"],e:"The U.S. Constitution is the highest law in the country. All other laws must be consistent with it. The Declaration of Independence explained why the colonies broke from Britain but is not a governing law."},
+{q:"Name one thing the U.S. Constitution does.",a:"Forms the government and protects the rights of the people",w:["Declares war on foreign nations","Manages the national economy","Sets federal tax rates"],e:"The Constitution creates the structure of the federal government, defines what each branch can do, and protects the fundamental rights of the people through its amendments."},
+{q:"The U.S. Constitution starts with 'We the People.' What does that mean?",a:"Popular sovereignty — the people govern themselves",w:["Government rules supreme over citizens","Only elected officials may govern","Courts have final say over all decisions"],e:"'We the People' means that the power of the government comes from the people — a principle called popular sovereignty. Citizens choose their leaders through elections."},
+{q:"How are changes made to the U.S. Constitution?",a:"Through the amendment process",w:["By presidential executive order","By Supreme Court ruling","By a congressional veto override"],e:"The Constitution is changed through amendments. Congress must propose an amendment with a two-thirds vote, and then three-fourths of states must ratify it. There are currently 27 amendments."},
+{q:"What does the Bill of Rights protect?",a:"The basic rights of Americans",w:["The powers of the federal government","Military authority over citizens","The rights of the president"],e:"The Bill of Rights is the first 10 amendments to the Constitution. It protects individual freedoms like freedom of speech, religion, and the right to a fair trial."},
+{q:"How many amendments does the U.S. Constitution have?",a:"27 amendments",w:["10 amendments","21 amendments","33 amendments"],e:"There are 27 amendments in total. The first 10, ratified in 1791, are the Bill of Rights. The most recent (the 27th) was ratified in 1992 and deals with congressional pay."},
+{q:"Why is the Declaration of Independence important?",a:"It declared America free from British control and that all people are created equal",w:["It established the Supreme Court","It created the federal budget process","It abolished slavery in all states"],e:"Adopted on July 4, 1776, the Declaration of Independence announced the colonies' separation from Britain and established that all people have equal and inalienable rights to life, liberty, and the pursuit of happiness."},
+{q:"What founding document said the American colonies were free from Britain?",a:"The Declaration of Independence",w:["The U.S. Constitution","The Federalist Papers","The Mayflower Compact"],e:"The Declaration of Independence, written by Thomas Jefferson and adopted in 1776, formally announced that the 13 colonies were separating from Great Britain and forming a new nation."},
+{q:"Name two important ideas from the Declaration of Independence and the U.S. Constitution.",a:"Equality and liberty",w:["Taxation and military service","Commerce and trade regulation","Federal supremacy and war powers"],e:"The founding documents emphasize that all people are created equal and that liberty — freedom from tyranny — is a fundamental right. These ideas are the philosophical core of American democracy."},
+{q:"'Life, Liberty, and the pursuit of Happiness' appears in what founding document?",a:"The Declaration of Independence",w:["The U.S. Constitution","The Federalist Papers","The Emancipation Proclamation"],e:"This famous phrase is from the Declaration of Independence (1776). Thomas Jefferson wrote it to explain that people have natural, God-given rights that no government can take away."},
+{q:"What is the economic system of the United States?",a:"Capitalism — a free market economy",w:["Socialism","Communism","A planned economy"],e:"The U.S. has a capitalist, free-market economy where private individuals and businesses own property and make economic decisions. Prices are set by supply and demand, not by the government."},
+{q:"What is the rule of law?",a:"No one is above the law — everyone including the government must obey it",w:["The president sets the rules for all citizens","Congress can override any court decision","Courts are above the law"],e:"The rule of law means that laws apply equally to all people — including presidents, judges, and members of Congress. No person or institution is above the law in the United States."},
+{q:"Many documents influenced the U.S. Constitution. Name one.",a:"The Federalist Papers",w:["The Emancipation Proclamation","The Monroe Doctrine","The Treaty of Paris 1783"],e:"The Federalist Papers were 85 essays by Hamilton, Madison, and Jay explaining and supporting the new Constitution. Other influential documents include the Declaration of Independence and Articles of Confederation."},
+{q:"There are three branches of government. Why?",a:"Checks and balances — so no one branch becomes too powerful",w:["To speed up the lawmaking process","To give the president more authority","To reduce federal government spending"],e:"The Founders divided government into three branches so each could check the power of the others. This separation of powers prevents any single branch from becoming a tyranny."},
+{q:"Name the three branches of government.",a:"Legislative, executive, and judicial",w:["Federal, state, and local","Senate, House, and Cabinet","Presidential, congressional, and military"],e:"The legislative branch (Congress) writes laws. The executive branch (President) enforces laws. The judicial branch (courts) interprets laws. Together they form the entire federal government."},
+{q:"The President of the United States is in charge of which branch of government?",a:"The executive branch",w:["The legislative branch","The judicial branch","The congressional branch"],e:"The President leads the executive branch, responsible for enforcing the laws passed by Congress. The executive branch includes the Cabinet, federal agencies, and the military."},
+{q:"What part of the federal government writes laws?",a:"The U.S. Congress (the legislative branch)",w:["The Supreme Court","The President's Cabinet","The Department of Justice"],e:"Congress — made up of the Senate and House of Representatives — is the legislative branch and has the power to write and pass laws. The President can sign them into law or veto them."},
+{q:"What are the two parts of the U.S. Congress?",a:"The Senate and the House of Representatives",w:["The Senate and the Supreme Court","The House and the Cabinet","The Congress and the Presidency"],e:"Congress has two chambers: the Senate (100 senators, 2 per state) and the House of Representatives (435 members, based on state population). Both must pass a bill before it goes to the President."},
+{q:"Name one power of the U.S. Congress.",a:"Writes laws / declares war / makes the federal budget",w:["Appoints federal judges","Commands the military in battle","Sets all foreign policy unilaterally"],e:"Congress has many powers including writing legislation, declaring war, and approving the federal budget. Only Congress — not the President — can formally declare war."},
+{q:"How many U.S. senators are there?",a:"100 senators",w:["50 senators","435 senators","535 senators"],e:"There are 100 U.S. senators — two from each of the 50 states. Every state gets the same number of senators regardless of its population, giving smaller states equal voice in the Senate."},
+{q:"How long is a term for a U.S. senator?",a:"6 years",w:["2 years","4 years","8 years"],e:"U.S. senators serve 6-year terms. Senate elections are staggered so roughly one-third of the Senate is up for election every 2 years. There is no term limit for senators."},
+{q:"How many voting members are in the House of Representatives?",a:"435 voting members",w:["100 members","535 members","50 members"],e:"The House has 435 voting members. Each state's number of representatives is based on its population. California has the most; small states like Wyoming have just one."},
+{q:"How long is a term for a member of the House of Representatives?",a:"2 years",w:["4 years","6 years","3 years"],e:"Representatives serve 2-year terms, meaning the entire House is up for election every two years. This shorter term keeps representatives closely connected to the people they represent."},
+{q:"Why do U.S. representatives serve shorter terms than U.S. senators?",a:"To more closely follow public opinion",w:["They earn lower salaries than senators","They represent fewer people than senators","It was a historical accident from the founding"],e:"The Founders gave representatives 2-year terms so they would stay closely connected to the views of their constituents. Senators have longer 6-year terms to allow more deliberate, long-term thinking."},
+{q:"How many senators does each state have?",a:"Two senators per state",w:["One senator per state","Three senators per state","It depends on the state's population"],e:"Every state has exactly two senators, regardless of population. This gives smaller states equal footing with larger ones in the Senate, unlike the House where seats are based on population."},
+{q:"Why does each state have two senators?",a:"Equal representation — the Great Compromise (Connecticut Compromise)",w:["Larger states needed more representation","It was a compromise favoring bigger states","It was decided by the Supreme Court in 1800"],e:"The Great Compromise of 1787 settled a dispute between large and small states. The solution: equal representation in the Senate, population-based representation in the House."},
+{q:"What is the name of the Speaker of the House of Representatives now?",a:"Mike Johnson",w:["Chuck Schumer","Hakeem Jeffries","Mitch McConnell"],e:"Mike Johnson of Louisiana is the current Speaker of the House. The Speaker leads the House of Representatives and is second in the presidential line of succession, after the Vice President."},
+{q:"Who does a U.S. senator represent?",a:"Citizens of their state",w:["All U.S. citizens equally","Only registered voters in their state","Residents of their home county"],e:"Each senator represents all of the people in their state — not just those who voted for them. They advocate for their state's interests in the federal Senate."},
+{q:"Who elects U.S. senators?",a:"Citizens from their state",w:["The Electoral College","State legislatures","The President nominates them"],e:"Since the 17th Amendment (1913), U.S. senators are directly elected by voters of their state. Before that, state legislatures chose senators."},
+{q:"Who does a member of the House of Representatives represent?",a:"Citizens in their congressional district",w:["All citizens of their state","Citizens of all 50 states","Only property owners in their district"],e:"Each House member represents a specific congressional district. Districts are drawn based on population from the census and redrawn every 10 years."},
+{q:"Who elects members of the House of Representatives?",a:"Citizens from their congressional district",w:["The state governor","The Senate confirms them","The Electoral College"],e:"Voters in each congressional district elect their own representative to the House. There are 435 districts across all 50 states, with the number per state based on population."},
+{q:"Some states have more representatives than other states. Why?",a:"Because of the state's population",w:["Because of the size of the state in square miles","Because of how long the state has been in the Union","Because of the number of senators the state has"],e:"House seats are based on population. After each 10-year census, the 435 seats are redistributed. California has 52 representatives; Wyoming, Montana, and other small states have only 1."},
+{q:"The President of the United States is elected for how many years?",a:"4 years",w:["2 years","6 years","8 years"],e:"The President serves a 4-year term. Presidential elections are held every four years in November. Under the 22nd Amendment, a president may only be elected twice — a maximum of 8 years total."},
+{q:"The President can serve only two terms. Why?",a:"The 22nd Amendment — to keep the president from becoming too powerful",w:["Congress votes on term limits each election","The Supreme Court decided this in 1952","Presidents voluntarily agree to step down"],e:"The 22nd Amendment, ratified in 1951, limits presidents to two elected terms (8 years). It was prompted partly by FDR serving four terms and prevents any person from holding power indefinitely."},
+{q:"What is the name of the President of the United States now?",a:"Donald Trump",w:["Joe Biden","Barack Obama","Kamala Harris"],e:"Donald Trump is the 47th President of the United States, having won the 2024 presidential election. He previously served as the 45th president from 2017 to 2021."},
+{q:"What is the name of the Vice President of the United States now?",a:"JD Vance",w:["Mike Pence","Kamala Harris","Ron DeSantis"],e:"JD Vance is the current Vice President. He is from Ohio and previously served as a U.S. senator before becoming vice president in January 2025."},
+{q:"If the president can no longer serve, who becomes president?",a:"The Vice President",w:["The Speaker of the House","The Secretary of State","The Chief Justice of the Supreme Court"],e:"The Vice President is first in the line of succession. Next are the Speaker of the House, then the President pro tempore of the Senate, then Cabinet secretaries in a specific order."},
+{q:"Name one power of the president.",a:"Signs bills into law / vetoes bills / is Commander in Chief",w:["Writes all federal laws","Approves the federal budget alone","Directly elects Supreme Court justices"],e:"The president can sign or veto bills passed by Congress, serves as Commander in Chief of the military, appoints federal judges and Cabinet members, and conducts foreign policy."},
+{q:"Who is Commander in Chief of the U.S. military?",a:"The President of the United States",w:["The Secretary of Defense","The Joint Chiefs of Staff","The Speaker of the House"],e:"The President is Commander in Chief of all U.S. armed forces. The Founders wanted elected civilian leadership over the military — not generals or military officers."},
+{q:"Who signs bills to become laws?",a:"The President of the United States",w:["The Senate Majority Leader","The Speaker of the House","The Chief Justice"],e:"After Congress passes a bill, the President signs it into law. If the President disagrees, they can veto it. Congress can override a veto with a two-thirds vote in both chambers."},
+{q:"Who vetoes bills?",a:"The President of the United States",w:["The Senate Majority Leader","The Speaker of the House","The Attorney General"],e:"The President can veto any bill passed by Congress. Congress can override a presidential veto, but it requires a two-thirds majority vote in both the Senate and the House."},
+{q:"Who appoints federal judges?",a:"The President of the United States",w:["The Senate alone","The Chief Justice of the United States","The Speaker of the House"],e:"Federal judges — including Supreme Court justices — are nominated by the President and confirmed by the Senate. Once confirmed, federal judges serve for life, giving them independence from political pressure."},
+{q:"The executive branch has many parts. Name one.",a:"The President, Cabinet, or federal departments and agencies",w:["The Supreme Court","The Senate Judiciary Committee","The Congressional Budget Office"],e:"The executive branch includes the President, Vice President, Cabinet, and the many federal departments and agencies — like the Department of Homeland Security or the FBI. These bodies carry out and enforce the nation's laws."},
+{q:"What does the President's Cabinet do?",a:"Advises the President",w:["Writes legislation for the president to sign","Confirms federal judges","Manages the Supreme Court's docket"],e:"The Cabinet is made up of the heads of the 15 executive departments (like the Secretary of State and Secretary of Defense). They advise the President on policy decisions and run major government agencies."},
+{q:"What are two Cabinet-level positions?",a:"Secretary of State and Secretary of Defense",w:["Senate Majority Leader and Speaker of the House","Governor and Lieutenant Governor","Chief of Staff and Press Secretary"],e:"There are 15 Cabinet departments. The Secretary of State manages foreign affairs. The Secretary of Defense oversees the military. Other Cabinet positions include Attorney General and Secretary of the Treasury."},
+{q:"Why is the Electoral College important?",a:"It decides who is elected president",w:["It manages the popular vote count only","It elects the U.S. Senate","It confirms Supreme Court justices"],e:"The Electoral College is the process where 538 electors cast the official votes for president. A candidate needs 270 electoral votes to win. It was created as a compromise between direct popular election and congressional selection."},
+{q:"What is one part of the judicial branch?",a:"The Supreme Court or federal courts",w:["The Cabinet","The Department of Justice","The Senate Judiciary Committee"],e:"The judicial branch includes the Supreme Court and all federal courts below it. These courts interpret laws and decide whether they are constitutional."},
+{q:"What does the judicial branch do?",a:"Reviews laws and decides if they are constitutional",w:["Writes new federal laws","Collects federal taxes","Commands the U.S. military"],e:"The judicial branch reviews laws and legal disputes. Its most important power — judicial review — allows courts to strike down laws that violate the Constitution, established in Marbury v. Madison (1803)."},
+{q:"What is the highest court in the United States?",a:"The Supreme Court",w:["The Court of Appeals","The U.S. District Court","The Federal Circuit Court"],e:"The Supreme Court is the highest court in the country. Its decisions are final and cannot be appealed. It hears cases involving the Constitution, federal law, and disputes between states."},
+{q:"How many seats are on the Supreme Court?",a:"9 seats",w:["7 seats","11 seats","13 seats"],e:"The Supreme Court has 9 justices: 1 Chief Justice and 8 Associate Justices. The number is set by Congress, not the Constitution, and has been 9 since 1869."},
+{q:"How many Supreme Court justices are usually needed to decide a case?",a:"5 justices (a majority)",w:["All 9 justices","3 justices","7 justices"],e:"A simple majority — at least 5 of the 9 justices — is needed to decide a case. Justices who agree write a majority opinion; those who disagree may write dissenting opinions."},
+{q:"How long do Supreme Court justices serve?",a:"For life — a lifetime appointment",w:["10-year renewable terms","6-year terms","Until they turn 75"],e:"Article III of the Constitution states that federal judges serve 'during good behavior,' which in practice means for life. They can only be removed through impeachment by Congress."},
+{q:"Why do Supreme Court justices serve for life?",a:"To be independent of politics and limit outside influence",w:["They are elected with no term limits","Congress approved lifetime compensation","It reduces the cost of repeated confirmation hearings"],e:"Lifetime tenure protects justices from political pressure. Because they don't need to worry about re-election or future jobs, they can make decisions based on the law, not what is politically popular."},
+{q:"Who is the Chief Justice of the United States now?",a:"John Roberts",w:["Clarence Thomas","Sonia Sotomayor","Elena Kagan"],e:"John Roberts has been Chief Justice since 2005, appointed by President George W. Bush. The Chief Justice presides over the Supreme Court and leads the entire federal judicial branch."},
+{q:"Name one power that is only for the federal government.",a:"Print money / declare war / make treaties",w:["Issue driver's licenses","Fund public schools","Set local speed limits"],e:"The Constitution gives certain powers exclusively to the federal government: printing money, declaring war, making treaties with foreign nations, and regulating interstate commerce."},
+{q:"Name one power that is only for the states.",a:"Issue driver's licenses / fund schools / provide police protection",w:["Print money","Declare war","Make treaties with foreign countries"],e:"Under the 10th Amendment, powers not given to the federal government are reserved for states. States run schools, issue licenses, maintain police and fire departments, and control zoning and land use."},
+{q:"What is the purpose of the 10th Amendment?",a:"Powers not given to the federal government belong to the states or the people",w:["It guarantees the right to bear arms","It protects freedom of speech","It gives Congress unlimited powers"],e:"The 10th Amendment makes clear that the federal government only has the powers specifically listed in the Constitution. All other powers belong to state governments or to the people — a principle called federalism."},
+{q:"There are four amendments about who can vote. Describe one.",a:"Citizens 18 and older can vote",w:["Only landowners 21 and older can vote","Citizens must pass a civics test to vote","Only men born in the U.S. may vote"],e:"The four voting amendments are: 15th (Black men can vote, 1870), 19th (women can vote, 1920), 24th (no poll tax, 1964), and 26th (voting age lowered to 18, 1971)."},
+{q:"Who can vote in federal elections, run for federal office, and serve on a jury in the United States?",a:"U.S. citizens",w:["Legal permanent residents (green card holders)","Any adult over 18 living in the U.S.","Anyone who pays federal income taxes"],e:"Only U.S. citizens — whether born here or naturalized — can vote in federal elections, run for federal office, and serve on juries. Green card holders (permanent residents) cannot vote in federal elections."},
+{q:"What are three rights of everyone living in the United States?",a:"Freedom of speech, freedom of religion, and freedom of assembly",w:["Right to a government job and housing","Right to free healthcare and education","Right to vote, own a gun, and run for office"],e:"The First Amendment protects freedom of speech, religion, assembly, press, and the right to petition the government. These rights apply to everyone in the U.S., not just citizens. The right to vote, however, is reserved for citizens."},
+{q:"What do we show loyalty to when we say the Pledge of Allegiance?",a:"The United States and its flag",w:["The President of the United States","The U.S. Congress","The Supreme Court"],e:"The Pledge of Allegiance expresses loyalty to the flag as a symbol of the United States, and to the republic itself. It reflects commitment to the ideals of liberty and justice for all Americans."},
+{q:"Name two promises that new citizens make in the Oath of Allegiance.",a:"Give up loyalty to other countries and defend the U.S. Constitution",w:["Pay higher taxes than natural-born citizens for 10 years","Register with the Selective Service within 30 days","Give up all foreign property and bank accounts immediately"],e:"In the Oath of Allegiance, new citizens renounce loyalty to any foreign nation, swear to support and defend the Constitution, obey U.S. laws, and serve the country if needed."},
+{q:"How can people become United States citizens?",a:"By birth in the U.S. (14th Amendment) or through naturalization",w:["By living in the U.S. for 5 years with no other steps required","By marrying a U.S. citizen, which grants citizenship automatically","By holding a green card for 10 years with no criminal record"],e:"There are three ways to become a citizen: being born on U.S. soil (birthright citizenship under the 14th Amendment), being born abroad to a U.S. citizen parent, or going through the naturalization process — which includes this civics test."},
+{q:"What are two examples of civic participation in the United States?",a:"Voting and running for office",w:["Paying sales tax and leaving tips","Watching the news and reading newspapers daily","Owning property and starting a business"],e:"Civic participation means getting involved in how the government works. Examples include voting, running for office, joining a political party, contacting elected officials, volunteering for a campaign, or joining a community group."},
+{q:"What is one way Americans can serve their country?",a:"Vote, pay taxes, serve in the military, or work for the government",w:["Travel abroad as a cultural ambassador","Attend a four-year university","Post about politics on social media"],e:"Americans can serve their country by voting in elections, paying taxes that fund public services, serving in the military, working in government, or simply obeying the law and participating in civic life."},
+{q:"Why is it important to pay federal taxes?",a:"It is required by law (16th Amendment) and funds the federal government",w:["To pay only the president's salary and expenses","To fund state highway construction exclusively","To support the United Nations budget"],e:"The 16th Amendment (1913) gave Congress the power to collect income tax. Federal taxes fund national defense, Social Security, Medicare, federal courts, and many other programs. Paying taxes is both a legal duty and a civic responsibility."},
+{q:"Why is it important for men ages 18-25 to register for the Selective Service?",a:"It is required by law and makes the draft fair if needed",w:["It is needed to get a Social Security number","It is required to qualify for Medicare benefits","It is required before applying for a driver's license"],e:"All male residents of the U.S. between 18 and 25 are required by law to register with the Selective Service System. This registry would be used if a military draft ever became necessary, ensuring fairness by having records ready in advance."},
+{q:"The colonists came to America for many reasons. Name one.",a:"Religious freedom / political liberty / economic opportunity",w:["To find gold and silver for the British Crown","To conquer and trade with Native peoples","To establish trade routes to Asia"],e:"The original colonists came for many reasons: to practice their religion freely (like the Pilgrims), to escape poverty or persecution, or to find economic opportunity. These same motivations have drawn immigrants to America throughout its history."},
+{q:"Who lived in America before the Europeans arrived?",a:"Native Americans / American Indians",w:["Norse and Viking settlers","Spanish conquistadors","French fur traders"],e:"American Indians lived on the continent for thousands of years before European explorers arrived. Hundreds of distinct tribes with different languages, cultures, and governments existed across North America."},
+{q:"What group of people was taken and sold as slaves?",a:"Africans / people from Africa",w:["Asian immigrants from China and Japan","European indentured servants from Ireland","Native Americans from the western territories"],e:"Between the 1600s and 1865, millions of Africans were forcibly taken from their homes and sold into slavery in the Americas. Slavery was abolished by the 13th Amendment in 1865, after the Civil War."},
+{q:"What war did the Americans fight to win independence from Britain?",a:"The American Revolution (the Revolutionary War)",w:["The War of 1812","The French and Indian War","The Civil War"],e:"The American Revolutionary War lasted from 1775 to 1783. The war ended with the Treaty of Paris, in which Britain recognized the United States as an independent nation."},
+{q:"Name one reason why the Americans declared independence from Britain.",a:"Taxation without representation",w:["Britain was giving America too much independence","American colonists wanted to join France instead","Colonists wanted to establish their own monarchy"],e:"Colonists were angry that the British Parliament taxed them (through the Stamp Act, Tea Act, and others) without giving them any representation in Parliament. 'No taxation without representation' became a rallying cry of the Revolution."},
+{q:"Who wrote the Declaration of Independence?",a:"Thomas Jefferson",w:["Benjamin Franklin","George Washington","John Adams"],e:"Thomas Jefferson was the primary author of the Declaration of Independence in 1776. He was 33 years old at the time. Benjamin Franklin and John Adams helped edit the document, but Jefferson wrote the first draft."},
+{q:"When was the Declaration of Independence adopted?",a:"July 4, 1776",w:["July 4, 1783","June 15, 1775","September 17, 1787"],e:"The Continental Congress formally adopted the Declaration of Independence on July 4, 1776. This is why July 4th is celebrated as Independence Day — the 'birthday' of the United States as a nation."},
+{q:"The American Revolution had many important events. Name one.",a:"The Battle of Yorktown — British surrender",w:["The Louisiana Purchase","The signing of the Constitution","The Gettysburg Address"],e:"Key events include the Battle of Bunker Hill (1775), the Declaration of Independence (1776), Washington crossing the Delaware (1776), the Battle of Saratoga (1777), and the British surrender at Yorktown (1781), which effectively ended the war."},
+{q:"There were 13 original states. Name five.",a:"Virginia, Massachusetts, New York, Pennsylvania, and Georgia",w:["Texas, California, Florida, Ohio, and Nevada","Alabama, Mississippi, Tennessee, Kentucky, and Louisiana","Michigan, Wisconsin, Minnesota, Iowa, and Missouri"],e:"The 13 original states were the former colonies: New Hampshire, Massachusetts, Rhode Island, Connecticut, New York, New Jersey, Pennsylvania, Delaware, Maryland, Virginia, North Carolina, South Carolina, and Georgia."},
+{q:"What founding document was written in 1787?",a:"The U.S. Constitution",w:["The Declaration of Independence","The Bill of Rights","The Emancipation Proclamation"],e:"The U.S. Constitution was written at the Constitutional Convention in Philadelphia in 1787 and ratified in 1788. The Declaration of Independence was written in 1776, and the Bill of Rights was ratified in 1791."},
+{q:"The Federalist Papers supported the U.S. Constitution. Name one of the writers.",a:"Alexander Hamilton",w:["Thomas Jefferson","Benjamin Franklin","George Washington"],e:"The Federalist Papers were written by Alexander Hamilton, James Madison, and John Jay under the pen name 'Publius.' These 85 essays argued for ratification of the Constitution."},
+{q:"Why were the Federalist Papers important?",a:"They helped people understand and support the U.S. Constitution",w:["They started the American Revolution against Britain","They declared war on Britain in 1776","They created the first two American political parties"],e:"The Federalist Papers explained and defended the new Constitution to the public and to state legislators who needed to ratify it. They argued the Constitution would create a strong but limited government that protected individual rights."},
+{q:"Benjamin Franklin is famous for many things. Name one.",a:"Inventor / U.S. diplomat / first Postmaster General",w:["Writing the U.S. Constitution single-handedly","Commanding the Continental Army","Being the first President of the United States"],e:"Benjamin Franklin was a renowned inventor (lightning rod, bifocals), the first U.S. Postmaster General, a diplomat who helped secure France's alliance during the Revolution, and helped write the Declaration of Independence."},
+{q:"George Washington is famous for many things. Name one.",a:"'Father of Our Country' — first President of the United States",w:["Writing the Declaration of Independence","Founding Harvard University","Leading U.S. forces in the War of 1812"],e:"George Washington commanded the Continental Army during the Revolution, presided over the Constitutional Convention, and served as the first President (1789-1797). He set the precedent of stepping down after two terms."},
+{q:"Thomas Jefferson is famous for many things. Name one.",a:"Writer of the Declaration of Independence / third President",w:["Writing the U.S. Constitution","Commanding the Continental Army","Being the first Vice President of the United States"],e:"Thomas Jefferson wrote the Declaration of Independence and served as the third President (1801-1809). He also doubled the size of the country through the Louisiana Purchase (1803) and founded the University of Virginia."},
+{q:"James Madison is famous for many things. Name one.",a:"'Father of the Constitution' — fourth President of the United States",w:["Writing the Declaration of Independence","Commanding forces in the American Revolution","Being the first Secretary of State"],e:"James Madison is called the 'Father of the Constitution' for his leading role in drafting it. He also co-authored the Federalist Papers and served as the fourth President (1809-1817) during the War of 1812."},
+{q:"Alexander Hamilton is famous for many things. Name one.",a:"First Secretary of the Treasury / co-author of the Federalist Papers",w:["Being the second President of the United States","Writing the Declaration of Independence","Commanding the Continental Army at Yorktown"],e:"Alexander Hamilton was the first Secretary of the Treasury and established much of the U.S. financial system, including the first national bank. He also co-authored the Federalist Papers and served as an aide to General Washington."},
+{q:"What territory did the United States buy from France in 1803?",a:"The Louisiana Territory",w:["The Florida Territory","The Texas Territory","The Alaska Territory"],e:"President Thomas Jefferson negotiated the Louisiana Purchase in 1803, buying roughly 828,000 square miles from France for about $15 million. This doubled the size of the United States and opened the way for westward expansion."},
+{q:"Name one war fought by the United States in the 1800s.",a:"The Civil War",w:["World War I","The Revolutionary War","The Cold War"],e:"The U.S. fought several wars in the 1800s: the War of 1812, the Mexican-American War (1846-48), the Civil War (1861-65), and the Spanish-American War (1898). WWI and the Cold War occurred in the 1900s."},
+{q:"Name the U.S. war between the North and the South.",a:"The Civil War",w:["The Revolutionary War","The War of 1812","The Spanish-American War"],e:"The Civil War (1861-1865) was fought between the Union (North) and the Confederacy (South). The main issues were slavery and states' rights. The Union's victory preserved the country and led to the abolition of slavery."},
+{q:"The Civil War had many important events. Name one.",a:"The Emancipation Proclamation",w:["The Battle of Bunker Hill","The signing of the Declaration of Independence","Washington's crossing of the Delaware River"],e:"Important Civil War events include Fort Sumter (the first battle), the Battle of Gettysburg (a turning point), the Emancipation Proclamation (1863, freeing slaves in Confederate states), and the surrender at Appomattox (1865, ending the war)."},
+{q:"Abraham Lincoln is famous for many things. Name one.",a:"Freed the slaves / Emancipation Proclamation / 16th President",w:["Writing the U.S. Constitution","Commanding U.S. forces in World War I","Founding the Democratic Party"],e:"Abraham Lincoln served as the 16th President during the Civil War. He issued the Emancipation Proclamation in 1863 and preserved the Union. He is remembered as one of America's greatest presidents."},
+{q:"What did the Emancipation Proclamation do?",a:"Freed enslaved people in the Confederate states",w:["Officially ended the Civil War at Appomattox","Gave women the right to vote","Created the 14th Amendment to the Constitution"],e:"President Lincoln's Emancipation Proclamation, effective January 1, 1863, declared enslaved people in Confederate states to be free. The 13th Amendment (1865) then abolished slavery nationwide."},
+{q:"What U.S. war ended slavery?",a:"The Civil War",w:["World War I","The Revolutionary War","The War of 1812"],e:"The Civil War's end led directly to the 13th Amendment (1865), which abolished slavery throughout the United States. Though the Emancipation Proclamation was a major step, it was the Union's victory that made abolition possible."},
+{q:"What amendment says all persons born or naturalized in the U.S. are citizens?",a:"The 14th Amendment",w:["The 13th Amendment","The 15th Amendment","The 19th Amendment"],e:"The 14th Amendment (1868) established birthright citizenship, overturning the Dred Scott decision. The 13th ended slavery, the 15th gave Black men the vote, and the 19th gave women the right to vote."},
+{q:"When did all men get the right to vote?",a:"After the Civil War — with the 15th Amendment in 1870",w:["In 1920 with the 19th Amendment","In 1865 when the Civil War ended","In 1900 at the start of the new century"],e:"The 15th Amendment (1870) prohibited denying the right to vote based on race or color. Women of all races gained the right to vote later with the 19th Amendment in 1920."},
+{q:"Name one leader of the women's rights movement in the 1800s.",a:"Susan B. Anthony",w:["Eleanor Roosevelt","Rosa Parks","Harriet Beecher Stowe"],e:"Susan B. Anthony is famous for her work to secure women's voting rights. Other leaders of the 1800s women's rights movement include Elizabeth Cady Stanton, Sojourner Truth, Harriet Tubman, and Lucretia Mott."},
+{q:"Name one war fought by the United States in the 1900s.",a:"World War II",w:["The Revolutionary War","The Civil War","The War of 1812"],e:"The U.S. fought several wars in the 1900s: WWI (1917-18), WWII (1941-45), the Korean War (1950-53), the Vietnam War (1955-75), and the Gulf War (1990-91). The Revolutionary War and Civil War were in earlier centuries."},
+{q:"Why did the United States enter World War I?",a:"Germany attacked U.S. ships / to support the Allied Powers",w:["To protect trade routes with Japan","To defend Cuba from Spanish invasion","Because Britain declared war on the United States"],e:"The U.S. entered WWI in 1917 mainly because Germany's submarines were attacking American ships (unrestricted submarine warfare). The U.S. joined the Allied Powers (Britain, France, Russia, Italy) against the Central Powers."},
+{q:"When did all women get the right to vote?",a:"1920 — with the 19th Amendment",w:["1870 with the 15th Amendment","1945 after World War II","1865 after the Civil War"],e:"The 19th Amendment was ratified on August 18, 1920, giving women the right to vote nationwide. Susan B. Anthony and other suffragists campaigned for this right for decades before it was won."},
+{q:"What was the Great Depression?",a:"The longest economic recession in modern history",w:["A major national drought that destroyed crops","A worldwide military conflict during the 1930s","A period of rapid industrial and economic growth"],e:"The Great Depression (1929-1939) was a severe worldwide economic downturn. Banks failed, businesses closed, and U.S. unemployment reached 25%. It lasted until WWII boosted the economy."},
+{q:"When did the Great Depression start?",a:"The stock market crash of 1929",w:["The stock market crash of 1941","The financial panic of 1933","The economic collapse of 1917"],e:"The Great Depression began with the dramatic stock market crash in October 1929. Billions of dollars in stock value were wiped out in days, triggering bank failures, massive unemployment, and a decade-long economic crisis."},
+{q:"Who was president during the Great Depression and World War II?",a:"Franklin D. Roosevelt",w:["Harry Truman","Woodrow Wilson","Herbert Hoover"],e:"Franklin D. Roosevelt (FDR) served as president from 1933 to 1945, longer than anyone else. He created the New Deal programs to combat the Depression and led the country through most of WWII. Hoover was president when the Depression began."},
+{q:"Why did the United States enter World War II?",a:"Japan bombed Pearl Harbor on December 7, 1941",w:["Germany invaded France and Belgium","Britain formally asked the U.S. to join the war","The U.S. wanted to stop Japanese trade expansion"],e:"Japan launched a surprise attack on the U.S. naval base at Pearl Harbor, Hawaii, on December 7, 1941 — 'a date which will live in infamy.' Congress declared war on Japan the next day, and on Germany and Italy days later."},
+{q:"Dwight Eisenhower is famous for many things. Name one.",a:"General in WWII / 34th President of the United States",w:["Writing the Marshall Plan for European recovery","Being the first five-star general in U.S. history","Founding the NATO alliance single-handedly"],e:"Dwight D. Eisenhower commanded Allied forces in Europe during WWII, including the D-Day invasion. He served as the 34th President (1953-1961) and signed the Federal-Aid Highway Act of 1956, creating the Interstate Highway System."},
+{q:"Who was the United States' main rival during the Cold War?",a:"The Soviet Union (USSR)",w:["China","Germany","Japan"],e:"The Cold War (1947-1991) was a period of political and military tension between the U.S. and the Soviet Union. It involved an arms race, the Space Race, and conflicts in Korea, Vietnam, and elsewhere — but the two superpowers never directly fought each other."},
+{q:"During the Cold War, what was one main concern of the United States?",a:"The spread of communism / nuclear war",w:["Immigration from Eastern Europe","The rise of fascism in Latin America","Economic competition with Great Britain"],e:"The U.S. was deeply concerned about communism spreading globally under Soviet influence, and about nuclear war. Both sides built massive nuclear arsenals, creating a deterrent policy called mutually assured destruction (MAD)."},
+{q:"Why did the United States enter the Korean War?",a:"To stop the spread of communism",w:["To protect oil supplies in Asia","North Korea attacked U.S. military bases in Japan","Japan invaded South Korea and asked for U.S. help"],e:"When communist North Korea (backed by the Soviet Union and China) invaded South Korea in 1950, the U.S. and UN forces intervened to stop the spread of communism. The war ended in an armistice in 1953, leaving Korea divided."},
+{q:"Why did the United States enter the Vietnam War?",a:"To stop the spread of communism",w:["To protect important shipping trade routes","France formally requested U.S. military assistance","North Vietnam attacked the U.S. mainland"],e:"U.S. involvement in Vietnam grew from the 1950s to 1970s based on the 'domino theory' — if South Vietnam fell to communism, other nations would follow. The war ended with U.S. withdrawal in 1973."},
+{q:"What did the civil rights movement do?",a:"Fought to end racial discrimination",w:["Lobbied for a higher federal minimum wage","Worked to limit immigration into the United States","Pushed to give women the right to vote"],e:"The civil rights movement of the 1950s and 1960s fought to end racial segregation and discrimination against African Americans. Key victories included the Civil Rights Act of 1964 and the Voting Rights Act of 1965."},
+{q:"Martin Luther King, Jr. is famous for many things. Name one.",a:"Fought for civil rights and equality for all Americans",w:["Founded the NAACP in the early 1900s","Ran for president of the United States in 1968","Single-handedly wrote the Civil Rights Act of 1964"],e:"Dr. King was the most prominent leader of the civil rights movement. He led nonviolent protests including the Montgomery Bus Boycott and the March on Washington (1963), where he delivered his 'I Have a Dream' speech. He won the Nobel Peace Prize in 1964."},
+{q:"Why did the United States enter the Persian Gulf War?",a:"To remove the Iraqi military from Kuwait",w:["To secure Middle Eastern oil supplies for the U.S.","Iraq attacked Saudi Arabian cities","To support Iran's government in a regional conflict"],e:"In 1990, Iraq under Saddam Hussein invaded Kuwait. The U.S. led a coalition of 35 nations in Operation Desert Storm (1991) to drive Iraqi forces out of Kuwait. The war lasted about 6 weeks and successfully liberated Kuwait."},
+{q:"What major event happened on September 11, 2001 in the United States?",a:"Terrorists attacked the U.S. — crashed planes into the World Trade Center and Pentagon",w:["Hurricane Katrina devastated New Orleans and the Gulf Coast","The Oklahoma City federal building was bombed","The U.S. stock market crashed and trading was suspended"],e:"On 9/11, al-Qaeda terrorists hijacked four planes. Two were flown into the World Trade Center in New York (which collapsed), one into the Pentagon in Virginia, and one crashed in a Pennsylvania field. Nearly 3,000 people were killed."},
+{q:"Name one U.S. military conflict after the September 11, 2001 attacks.",a:"The War in Afghanistan / War in Iraq / War on Terror",w:["The Persian Gulf War","The Korean War","The Vietnam War"],e:"Following 9/11, the U.S. launched the War in Afghanistan (2001-2021) to destroy al-Qaeda and remove the Taliban. The War in Iraq began in 2003. The Persian Gulf War, Korean War, and Vietnam War all occurred before 9/11."},
+{q:"Name one American Indian tribe in the United States.",a:"Cherokee / Navajo / Sioux / Apache (among many others)",w:["Aztec","Mayan","Inca"],e:"There are hundreds of federally recognized American Indian tribes in the U.S. Some of the largest include the Cherokee, Navajo, Sioux, and Apache. The Aztec, Mayan, and Inca were civilizations in Mexico and South America — not within U.S. borders."},
+{q:"Name one example of an American innovation.",a:"The airplane / light bulb / assembly line / integrated circuit",w:["The printing press (Gutenberg, Germany)","The steam engine (Watt, Great Britain)","Penicillin (Fleming, Great Britain)"],e:"American innovators have contributed many world-changing inventions: Thomas Edison's light bulb, the Wright brothers' airplane, Henry Ford's assembly line, the integrated circuit (microchip), and the Apollo moon landing in 1969."},
+{q:"What is the capital of the United States?",a:"Washington, D.C.",w:["New York City","Philadelphia","Boston"],e:"Washington, D.C. is the nation's capital, located on the Potomac River between Maryland and Virginia. D.C. stands for 'District of Columbia.' It has been the capital since 1800. Philadelphia was the temporary capital before that."},
+{q:"Where is the Statue of Liberty?",a:"New York Harbor / Liberty Island",w:["Washington, D.C. Harbor","Philadelphia Harbor","Boston Harbor"],e:"The Statue of Liberty stands on Liberty Island in New York Harbor. It was a gift from France and dedicated in 1886. The statue has welcomed millions of arriving immigrants and symbolizes freedom and democracy."},
+{q:"Why does the American flag have 13 stripes?",a:"To represent the 13 original colonies",w:["One stripe for each president in the first century","One stripe for each amendment in the Bill of Rights","One stripe for each Supreme Court justice"],e:"The 13 alternating red and white stripes represent the original 13 colonies that declared independence from Britain in 1776. The number of stripes has stayed at 13, while the number of stars grew to 50 as new states joined the Union."},
+{q:"Why does the American flag have 50 stars?",a:"One star for each of the 50 states",w:["One star for each U.S. president in history","One star for each constitutional amendment","One star for each war the United States has won"],e:"The 50 stars represent the 50 states of the United States. The current 50-star flag has been used since July 4, 1960, after Hawaii became the 50th state in 1959. The flag has been updated 27 times as new states were admitted."},
+{q:"What is the name of the national anthem?",a:"The Star-Spangled Banner",w:["America the Beautiful","My Country 'Tis of Thee","God Bless America"],e:"The Star-Spangled Banner, written by Francis Scott Key in 1814, became the official national anthem in 1931. Key wrote it after watching the British bombardment of Fort McHenry during the War of 1812."},
+{q:"'E Pluribus Unum' is the nation's first motto. What does it mean?",a:"Out of many, one",w:["For the people, by the people","Liberty and justice for all","In God we trust"],e:"'E Pluribus Unum' is Latin for 'Out of many, one.' It means that many individual states and people from many backgrounds united to form one nation. It has appeared on the Great Seal of the United States since 1782."},
+{q:"What is Independence Day?",a:"A holiday celebrating U.S. independence from Britain — July 4th",w:["A holiday honoring all military veterans","A day remembering soldiers who died in battle","A day celebrating the signing of the U.S. Constitution"],e:"Independence Day, celebrated every July 4th, marks the anniversary of the Declaration of Independence being adopted in 1776. Memorial Day honors fallen soldiers; Veterans Day honors all who served in the military — those are different holidays."},
+{q:"Name three national U.S. holidays.",a:"Independence Day, Thanksgiving Day, and Memorial Day",w:["Valentine's Day, Easter, and Halloween","St. Patrick's Day, Mardi Gras, and Super Bowl Sunday","Tax Day, Election Day, and Groundhog Day"],e:"Official U.S. federal holidays include: New Year's Day, Martin Luther King Jr. Day, Presidents' Day, Memorial Day, Juneteenth, Independence Day (July 4), Labor Day, Columbus Day, Veterans Day, Thanksgiving, and Christmas Day."},
+{q:"What is Memorial Day?",a:"A holiday to honor soldiers who died in military service",w:["A holiday honoring all active-duty military members","A holiday celebrating U.S. independence on July 4th","A holiday remembering the end of World War I"],e:"Memorial Day, observed on the last Monday of May, honors U.S. military personnel who died while serving. Veterans Day (November 11) honors all who have served. Independence Day (July 4) celebrates America's independence."},
+{q:"What is Veterans Day?",a:"A holiday to honor all people who have served in the U.S. military",w:["A holiday for soldiers who died in battle only","A holiday celebrating the end of World War II","A holiday honoring the Founding Fathers of the United States"],e:"Veterans Day, observed on November 11, honors all Americans who have served in the military — living and deceased. It originated as Armistice Day, marking the end of WWI in 1918. Memorial Day specifically honors those who died in service."}
+];
+
+function shuffle(arr){var a=[...arr];for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+var gameQ=[],cur=0,score=0,answers=[],sel=null,submitted=false;
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById('screen-'+id).classList.add('active');window.scrollTo(0,0);}
+
+function startGame(){
+  gameQ=shuffle(Q).slice(0,20).map(function(q){return Object.assign({},q,{choices:shuffle([q.a,q.w[0],q.w[1],q.w[2]])});});
+  cur=0;score=0;answers=[];sel=null;submitted=false;
+  showScreen('playing');renderQ();
+}
+
+function renderQ(){
+  var q=gameQ[cur],total=gameQ.length,pct=Math.round((cur/total)*100);
+  document.getElementById('q-counter').textContent='Question '+(cur+1)+' of '+total;
+  document.getElementById('score-counter').textContent='Score: '+score;
+  document.getElementById('progress-fill').style.width=Math.max(pct,3)+'%';
+  document.getElementById('q-badge').textContent='Q'+(cur+1)+' of '+total;
+  document.getElementById('question-text').textContent=q.q;
+  var c=document.getElementById('choices-container');
+  c.innerHTML='';
+  q.choices.forEach(function(choice){
+    var btn=document.createElement('button');
+    btn.className='choice-btn';btn.textContent=choice;
+    btn.onclick=function(){selectChoice(choice,btn);};
+    c.appendChild(btn);
+  });
+  document.getElementById('submit-btn').className='submit-btn';
+  document.getElementById('hint-text').style.display='block';
+  document.getElementById('feedback-box').style.display='none';
+  document.getElementById('next-btn').className='next-btn';
+  document.getElementById('next-btn').textContent=cur+1>=gameQ.length?'See My Results \u2192':'Next Question \u2192';
+  sel=null;submitted=false;
+}
+
+function selectChoice(choice,btn){
+  if(submitted)return;
+  sel=choice;
+  document.querySelectorAll('.choice-btn').forEach(function(b){b.classList.remove('selected');});
+  btn.classList.add('selected');
+  document.getElementById('submit-btn').className='submit-btn visible';
+  document.getElementById('hint-text').style.display='none';
+}
+
+function submitAnswer(){
+  if(!sel||submitted)return;
+  submitted=true;
+  var q=gameQ[cur],correct=sel===q.a;
+  if(correct)score++;
+  document.getElementById('submit-btn').className='submit-btn';
+  document.getElementById('hint-text').style.display='none';
+  document.querySelectorAll('.choice-btn').forEach(function(btn){
+    btn.disabled=true;
+    if(btn.textContent===q.a)btn.classList.add('correct');
+    else if(btn.textContent===sel&&!correct)btn.classList.add('wrong');
+  });
+  var fb=document.getElementById('feedback-box');
+  var fh=document.getElementById('feedback-header');
+  var fbody=document.getElementById('feedback-body');
+  fb.style.display='block';
+  fb.className='feedback-box '+(correct?'correct':'wrong');
+  fh.textContent=correct?'\u2713 That is correct!':'\u2717 Not quite \u2014 here is the right answer:';
+  fbody.innerHTML=(!correct?'<div class="correct-label">Correct Answer</div><div class="correct-answer">'+q.a+'</div>':'')+'<div class="explanation">'+q.e+'</div>';
+  document.getElementById('next-btn').className='next-btn visible';
+  answers.push({q:q.q,selected:sel,correct:q.a,isCorrect:correct,explanation:q.e});
+}
+
+function nextQuestion(){
+  cur++;
+  if(cur>=gameQ.length)showResults();
+  else renderQ();
+}
+
+function showResults(){
+  var total=gameQ.length,passed=score>=12,pct=Math.round((score/total)*100);
+  document.getElementById('result-emoji').textContent=passed?'\uD83C\uDF89':'\uD83D\uDCDA';
+  document.getElementById('result-title').textContent=passed?'You Passed!':'Not Quite \u2014 Keep Studying';
+  document.getElementById('result-sub').textContent=passed?"Great work \u2014 you're ready for your naturalization interview.":"You need 12 out of 20 to pass. Review the answers below and try again.";
+  document.getElementById('stat-score').textContent=score+'/'+total;
+  document.getElementById('stat-score').className='stat-value '+(passed?'pass':'fail');
+  document.getElementById('stat-pct').textContent=pct+'%';
+  document.getElementById('stat-pct').className='stat-value '+(passed?'pass':'fail');
+  document.getElementById('review-container').style.display='none';
+  showScreen('results');
+}
+
+var reviewShown=false;
+function toggleReview(btn){
+  var c=document.getElementById('review-container');
+  if(!reviewShown){
+    c.innerHTML=answers.map(function(a,i){
+      return '<div class="review-item '+(a.isCorrect?'correct':'wrong')+'">'
+        +'<div class="review-tag '+(a.isCorrect?'correct':'wrong')+'">'+(a.isCorrect?'\u2713 Correct':'\u2717 Incorrect')+'</div>'
+        +'<div class="review-q">'+(i+1)+'. '+a.q+'</div>'
+        +'<div class="review-meta">'
+        +(!a.isCorrect?'<div class="your">Your answer: '+a.selected+'</div>':'')
+        +'<div class="ans">\u2713 '+a.correct+'</div>'
+        +'<div class="expl">'+a.explanation+'</div>'
+        +'</div></div>';
+    }).join('');
+    c.style.display='block';
+    btn.textContent='Hide Review';
+    reviewShown=true;
+  } else {
+    c.style.display='none';
+    btn.textContent='Review Answers';
+    reviewShown=false;
+  }
+}
+</script>
+</body>
+</html>
