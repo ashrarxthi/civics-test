@@ -334,6 +334,7 @@ function submitAnswer(){
   submitted=true;
   var q=gameQ[cur],correct=sel===q.a;
   if(correct)score++;
+  document.getElementById('score-counter').textContent='Score: '+score;
   document.getElementById('submit-btn').className='submit-btn';
   document.getElementById('hint-text').style.display='none';
   document.querySelectorAll('.choice-btn').forEach(function(btn){
